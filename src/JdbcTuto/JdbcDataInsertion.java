@@ -8,58 +8,57 @@ import java.util.Scanner;
 
 public class JdbcDataInsertion {
     public static void main(String[] args) {
-        Scanner sc = null;
-        String name = null;
-        int marks = 0;
-        String sirname = null;
         int roll = 0;
+        int marks = 0;
+        String name = null;
+        String sirname = null;
         Connection con = null;
         Statement st = null;
-        String query = null;
         int count = 0;
+        String query = null;
         try {
-            sc = new Scanner(System.in);
+            Scanner sc = new Scanner(System.in);
             System.out.println("Enter student roll no = ");
             roll = sc.nextInt();
-            System.out.println("Enter Student name = ");
+            System.out.println("Enter student name = ");
             name = sc.next();
-            System.out.println("Enter Student Sirname = ");
+            System.out.println("Enter student sirname = ");
             sirname = sc.next();
-            System.out.println("Enter Student marks = ");
+            System.out.println("Enter student marks = ");
             marks = sc.nextInt();
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "");
             query = "insert into student_info(roll,name,sirname,marks)" + "values('" + roll + "','" + name + "','" + sirname + "','" + marks + "')";
-            if (con != null)
+            if (con != null) {
                 st = con.createStatement();
-            if (st != null)
-                count = st.executeUpdate(query);
-            if (count != 0) {
-                System.out.println("Record Inserted Successfully");
-            } else {
-                System.out.println("Error while updating records");
             }
-        }
-        catch (SQLException e){
+            if (st != null) {
+                count = st.executeUpdate(query);
+            }
+            if (count != 0) {
+                System.out.println("Record inserted successfully");
+            } else {
+                System.out.println("Record not inserted");
+            }
+        } catch (ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            try{
-                if(st!=null){
+        } finally {
+
+
+            try {
+                if (con != null)
+                    con.close();
+
+                if (st != null) {
                     st.close();
                 }
-                if(con!=null){
-                    con.close();
-                }
             }
-            catch (SQLException e){
-                e.printStackTrace();
+             catch(SQLException sqle){
+                sqle.printStackTrace();
             }
         }
     }
